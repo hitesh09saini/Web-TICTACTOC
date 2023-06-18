@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TIC TAC TOC</title>
+     <style>
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+       
+body
+{
+            user-select: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            width: 100vw;
+            gap: 10px;
+            font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif ;
+}
+     
+       
+.tictactoc
+{
+            width: 50%;
+            height: 70%;
+            border-radius: 10px;
+            background: url(tictactoc.jpg)  repeat;
+            background-size: 300px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 15px;
+}
+
+.board
+{
+           
+           width: 70%;
+           height: 80%;
+           background-color: rgb(3, 1, 14);
+           gap: 5px;
+           display: grid;
+           grid-template-columns: repeat(3, 1fr);
+          grid-template-rows: repeat(3, 1fr);
+}
+
+       
+.grid
+{
+          font-family:monospace;
+            font-size: 4rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 40px;
+            background-color: #e0e0e0;
+           cursor: pointer;
+}
+
+.grid:hover {
+  background-color: #f0f0f0;
+}
+
+#reset
+{
+           background-color: rgb(16, 2, 43);
+           padding: 10px;
+           border-radius: 10px;
+           color: white;
+
+}
+     
+.pop-up{
+ position: absolute;
+  bottom: 20px;
+ display: none;
+}
+
+.pop-up img{
+  width: 90%;
+  
+}
+
+button{
+   position: absolute;
+   left: 40%;
+   background-color: rgb(202, 71, 31);
+   bottom: 50px;
+   height: 40px;
+   width: 80px;
+   border: 1px solid rgb(4, 105, 151);
+  color: white; 
+}
+
+.draw{
+  position: absolute;
+  bottom: 50px;
+  display: none;
+  
+}
+
+.draw img{
+   width:500px;
+}
+
+
+@media screen and (max-width: 766px) {
+  .tictactoc{
+    width: 80%;
+    height: 70%;
+  }
+}
+
+#nightmode{
+  align-self: flex-start;
+  margin-left: 10px;
+  border-radius: 20px;
+  width: 50px;
+  height: 30px;
+  border: 2px solid black;
+  display: flex;
+  
+}
+
+#bal{
+  width: 25px;
+  border-radius: 50%;
+  height: 25px;
+  background-color: rgb(253, 181, 72);
+  
+}
+
+#Name{
+  width: 600px;
+  height: 600px;
+  position: absolute;
+  background: linear-gradient( rgb(120, 120, 240) ,rgb(255, 0, 242)) ;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+    font-size: 30px;  
+    color: #f0f0f0;
+ 
+} 
+
+#p1{
+    margin: 50px;
+}
+
+
+#p2{
+   margin: 50px;
+}
+input{
+  border-radius: 10px;
+  font-size: 30px;
+ height: 40px;
+ text-align: center;
+}
+
+#winName{
+  position: fixed;
+  width: 300px;
+  height: 50px;
+  background-color: rgb(0, 7, 7);
+  top: 0px;
+  text-align: center;
+  color: rgb(4, 248, 4);
+  font-size: 30px;
+  display: none;
+}
+
+</style>
+
+</head>
+<body id="body">
+  <div id="nightmode" onclick="night()"> <div id="bal"></div></div>
+  <div id="Name">
+        <div>
+          <div id="p1">
+          <p>Player 1</p>
+          <input type="text" id="play1" placeholder="Player 1">
+          </div>
+          <div id="p2">
+          <p>Player 2</p>
+          <input type="text" id="play2" placeholder="Player 2" >
+           </div>
+          <button onclick="submit()">Submit</button>
+        </div>
+  </div>
+
+
+  <div class="draw" id="draw"><img src="over.png" alt=""><button id="try" onclick="tryagain()">Try Again</button></div>
+   <div id="winName"></div>
+   <div class="pop-up" id="popup"> <img src="win2.jpg" alt="Win"> <button id="restart" onclick="reStart()">Re-Start</button></div>
+  <div class="tictactoc">
+  <div class="board">
+  <div class="grid"  onclick="fill(this)" id="d0"></div>
+  <div class="grid"  onclick="fill(this)" id="d1"></div>
+  <div class="grid"  onclick="fill(this)" id="d2"></div>  
+  <div class="grid"  onclick="fill(this)" id="d3"></div>
+  <div class="grid"  onclick="fill(this)" id="d4"></div>
+  <div class="grid"  onclick="fill(this)" id="d5"></div>  
+  <div class="grid"  onclick="fill(this)" id="d6"></div>
+  <div class="grid"  onclick="fill(this)" id="d7"></div>
+  <div class="grid"  onclick="fill(this)" id="d8"></div>  
+  </div>
+  </div>
+  <div id="reset" onclick="reset()">Reset</div>
+    
+
+  <!--  logic of java Script for Tic-Tac-Toc  -->
+
+  <script>
+
+    // name
+    let pl1 = document.getElementById('play1');
+    let pl2 = document.getElementById('play2');
+  
+  
+    function submit(){
+      document.getElementById('Name').style.display ="none";
+    }
+
+    // night mode
+
+   let i =0;
+   function night(){
+    if(i==0){
+      document.getElementById('nightmode').style.justifyContent = "end";
+      document.getElementById('nightmode').style.backgroundColor ="black";
+      document.getElementById('nightmode').style.borderColor = "rgb(253, 181, 72)";
+      document.getElementById('body').style.backgroundColor = "black";
+      i++;
+    }else{
+      document.getElementById('nightmode').style.justifyContent = "start";
+      document.getElementById('nightmode').style.backgroundColor ="white";
+      document.getElementById('nightmode').style.borderColor = "black";
+      document.getElementById('body').style.backgroundColor = "white";
+      i--;
+    }
+  }
+
+  console.log("welcome to tictactoc");
+ 
+   let music = new Audio("music.mp3");
+   let turn = new Audio("ting.mp3");
+   let gameover = new Audio("gameover.mp3");
+   
+   let c =0;
+   let v = 0;
+   var set = new Set();
+   function fill(data){
+
+   
+      
+    if(!set.has(data.id)){
+  
+    if(c<9 ){
+      
+      turn.play();
+      if(c%2==0){
+        v =1;
+      document.getElementById(data.id).innerHTML ="X";
+      }else{
+        v =2;
+      document.getElementById(data.id).innerHTML ="O"; 
+      }
+     
+   }else{
+     
+     reset();
+
+   }
+   set.add(data.id);
+    c++;
+   
+  }
+  
+
+  //  call check win function
+  
+  
+
+
+  if(c>=9 && !win()){
+     reset();
+     gameover.play();
+     document.getElementById('winName').style.display ="block";
+     document.getElementById("winName").innerText = "Try Again";
+     document.getElementById('draw').style.display ="block";
+  }
+ 
+  console.log(win());
+  if(win()){
+    document.getElementById('winName').style.display ="block";
+    
+     if(v == 1){
+      document.getElementById("winName").innerText = pl1.value;
+     }else{
+      document.getElementById("winName").innerText = pl2.value;
+     }
+
+     music.play();
+     document.getElementById('popup').style.display ="block";
+  }
+  
+}
+
+  // reset
+  function reset(){
+    document.getElementById('winName').style.display ="none";
+    set.clear();
+    c=0;
+    for(var i=0;i<9;i++){
+      document.getElementById('d'+i).innerHTML =""; 
+    }
+  }
+  
+
+
+ 
+  
+  //  check win
+
+  function win(){
+  let d0 = document.getElementById('d0').innerText;
+  let d1 = document.getElementById('d1').innerText;
+  let d2 = document.getElementById('d2').innerText;
+  let d3 = document.getElementById('d3').innerText;
+  let d4 = document.getElementById('d4').innerText;
+  let d5 = document.getElementById('d5').innerText;
+  let d6 = document.getElementById('d6').innerText;
+  let d7 = document.getElementById('d7').innerText;
+  let d8 = document.getElementById('d8').innerText;
+    
+
+    if(d0!="" && d1!=""&& d2!="" && d0 == d1 && d1 == d2 ){
+
+      return  true;
+    }
+    else if(d3!="" && d4!=""&& d5!="" && d3 == d4 && d4 == d5){
+      return true;
+    }
+    else if(d6!="" && d7!=""&& d8!="" && d6 == d7 && d7 == d8 ){
+      return true;
+    }
+    else if(d0!="" && d4!=""&& d8!="" && d0 == d4 && d4 == d8){
+      return true;
+    }
+   else if(d2!="" && d4!=""&& d6!="" && d2 == d4 && d4 == d6 ){
+      return true;
+    }
+   else if(d0!="" && d3!=""&& d6!="" && d0 == d3 && d3 == d6 ){
+      return  true;
+    }
+    else if(d1!="" && d4!=""&& d7!="" && d1 == d4 && d4 == d7){
+      return true;
+    }
+    else if(d2!="" && d5!=""&& d8!="" && d2 == d5 && d5 == d8 ){
+      return true;
+    }else{
+      return false;
+    }
+  }
+
+
+  function reStart(){
+    // reset();
+    music.pause();
+		music.currentTime = 0;
+    document.getElementById('popup').style.display ="none";
+  }
+
+  function tryagain(){
+    document.getElementById('draw').style.display = "none";
+  }
+  </script>
+</body>
+</html>
